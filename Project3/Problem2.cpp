@@ -80,19 +80,4 @@ void problem2()
 	parallel_duration = find_matrix_value_parallel();
 
 	printf("Speed-up = %f\n", (float)serial_duration / (float)parallel_duration);
-
-	//// Inner product, Vector edition
-	//start = ippGetCpuClocks();
-	//__m128 sum = _mm_set1_ps(0.0f);
-	//for (long i = 0; i < VECTOR_SIZE; i += 4)
-	//	sum = _mm_add_ps(sum, _mm_mul_ps(_mm_loadu_ps(&v1[i]), _mm_loadu_ps(&v2[i])));
-	//sum = _mm_hadd_ps(sum, sum);
-	//sum = _mm_hadd_ps(sum, sum);
-	//fVRes = _mm_cvtss_f32(sum);
-	//end = ippGetCpuClocks();
-	//time2 = end - start;
-	//printf("Serial Run time = %d \n", (Ipp32s)time2);
-	//printf("Speedup = %f\n", (float)(time1) / (float)time2);
-
-	//exit(EXIT_SUCCESS);
 }
