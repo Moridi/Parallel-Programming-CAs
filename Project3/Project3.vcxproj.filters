@@ -24,12 +24,18 @@
     <ClCompile Include="Problem2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Problem3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Problem1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Problem2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Problem3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

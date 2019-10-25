@@ -48,7 +48,11 @@ Ipp64u find_matrix_value_serial()
 
 Ipp64u find_matrix_value_parallel()
 {
-	Ipp64u parallel_duration = 0;
+	Ipp64u start, end, parallel_duration;
+	start = ippGetCpuClocks();
+
+	end = ippGetCpuClocks();
+	parallel_duration = end - start;
 	return parallel_duration;
 }
 
@@ -59,6 +63,8 @@ void problem2()
 	printf("=== Matrix Operations ===\n");
 	serial_duration = find_matrix_value_serial();
 	parallel_duration = find_matrix_value_parallel();
+
+	printf("Speed-up = %d\n", serial_duration / parallel_duration);
 
 	//// Inner product, Vector edition
 	//start = ippGetCpuClocks();

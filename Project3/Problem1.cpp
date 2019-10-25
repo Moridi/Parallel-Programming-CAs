@@ -44,9 +44,12 @@ Ipp64u find_min_serial()
 
 Ipp64u find_min_parallel()
 {
-	Ipp64u parallel_duration = 0;
+	Ipp64u start, end, parallel_duration;
+	start = ippGetCpuClocks();
+
+	end = ippGetCpuClocks();
+	parallel_duration = end - start;
 	return parallel_duration;
-	//assert(size_t(vector) % 1)
 }
 
 void problem1()
@@ -57,7 +60,5 @@ void problem1()
 	Ipp64u serial_duration = find_min_serial();
 	Ipp64u parallel_duration = find_min_parallel();
 
-	while (1)
-		printf("");
-	exit(EXIT_SUCCESS);
+	printf("Speed-up = %d\n", serial_duration / parallel_duration);
 }
