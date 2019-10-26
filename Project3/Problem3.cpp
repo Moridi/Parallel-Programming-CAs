@@ -1,9 +1,13 @@
+#include <iostream>
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc_c.h>
-#include <iostream>
+
 #include "ipp.h"
 #include "intrin.h"
+
+#include "Common.h"
 
 using namespace cv;
 using namespace std;
@@ -26,24 +30,6 @@ void load_image()
 	img_width = in_img->width;
 
 	in_img_char = (unsigned char *)in_img->imageData;
-}
-
-void show_smoothed_image(IplImage* smooth_img)
-{
-	IplImage* in_show = cvCreateImage(cvSize((int)(img_width), 
-			(int)(img_height)), in_img->depth, in_img->nChannels);
-
-	IplImage* out_smooth = cvCreateImage(cvSize((int)(img_width),
-			(int)(img_height)), smooth_img->depth, smooth_img->nChannels);
-
-	cvResize(in_img, in_show);
-	cvResize(smooth_img, out_smooth);
-
-	namedWindow("Input image", CV_WINDOW_AUTOSIZE);
-	cvShowImage("Input image", in_show);
-	namedWindow("Smoothed image", CV_WINDOW_AUTOSIZE);
-	cvShowImage("Smoothed image", out_smooth);
-	waitKey(0);
 }
 
 Ipp64u smooth_serial()
@@ -72,7 +58,7 @@ Ipp64u smooth_serial()
 	serial_duration = end - start;
 
 	printf("Serial Run time = %d\n", (Ipp32s)serial_duration);
-	show_smoothed_image(smooth_img);
+	show_image(smooth_img, "Problem_3", "Serial");
 	
 	return serial_duration;
 }
@@ -121,7 +107,7 @@ Ipp64u smooth_parallel()
 	parallel_duration = end - start;
 
 	printf("Parallel Run time = %d\n", (Ipp32s)parallel_duration);
-	show_smoothed_image(smooth_img);
+	show_image(smooth_img, "Problem_3", "Parallel");
 
 	return parallel_duration;
 }

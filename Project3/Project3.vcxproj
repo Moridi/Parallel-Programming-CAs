@@ -76,6 +76,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Common.cpp" />
     <ClCompile Include="Problem1.cpp" />
     <ClCompile Include="Problem2.cpp" />
     <ClCompile Include="Problem3.cpp" />
@@ -83,6 +84,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Common.h" />
     <ClInclude Include="Problem1.h" />
     <ClInclude Include="Problem2.h" />
     <ClInclude Include="Problem3.h" />

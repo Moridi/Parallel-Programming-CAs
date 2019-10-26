@@ -8,24 +8,14 @@
 #include "ipp.h"
 #include "intrin.h"
 
+#include "Common.h"
+
 using namespace cv;
 using namespace std;
 
 IplImage *first, *second;
 unsigned char *first_data, *second_data;
 int height, width;
-
-void show_image(IplImage* img)
-{
-	IplImage* out_img = cvCreateImage(cvSize((int)(img->width / 2),
-		(int)(img->height / 2)), img->depth, img->nChannels);
-
-	cvResize(img, out_img);
-
-	namedWindow("Difference", CV_WINDOW_AUTOSIZE);
-	cvShowImage("Difference", out_img);
-	waitKey(0);
-}
 
 void load_images()
 {
@@ -61,8 +51,8 @@ Ipp64u diff_serial()
 	end = ippGetCpuClocks();
 	serial_duration = end - start;
 
-	show_image(diff_img);
-	printf("Parallel Run time = %d\n", (Ipp32s)serial_duration);
+	show_image(diff_img, "Problem_4", "Serial Output");
+	printf("Serial Run time = %d\n", (Ipp32s)serial_duration);
 
 	return serial_duration;
 }
@@ -89,7 +79,7 @@ Ipp64u diff_parallel()
 	end = ippGetCpuClocks();
 	parallel_duration = end - start;
 
-	show_image(diff_img);
+	show_image(diff_img, "Problem_4", "Parallel Output");
 	printf("Parallel Run time = %d\n", (Ipp32s)parallel_duration);
 	return parallel_duration;
 }
