@@ -9,7 +9,7 @@ using namespace std;
 
 int main(void)
 {
-	problem3();
+	problem4();
 	while (1)
 		printf("");
 }

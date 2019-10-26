@@ -30,15 +30,11 @@ void load_image()
 
 void show_smoothed_image(IplImage* smooth_img)
 {
-	IplImage* in_show = cvCreateImage(cvSize((int)(img_width),
-		(int)(img_height)),
-	in_img->depth,
-	in_img->nChannels);
+	IplImage* in_show = cvCreateImage(cvSize((int)(img_width), 
+			(int)(img_height)), in_img->depth, in_img->nChannels);
 
 	IplImage* out_smooth = cvCreateImage(cvSize((int)(img_width),
-		(int)(img_height)),
-		smooth_img->depth,
-		smooth_img->nChannels);
+			(int)(img_height)), smooth_img->depth, smooth_img->nChannels);
 
 	cvResize(in_img, in_show);
 	cvResize(smooth_img, out_smooth);
@@ -100,21 +96,21 @@ Ipp64u smooth_parallel()
 					smoothed_data[u][v] = _mm_loadu_si128(
 							(__m128i*)(in_img_char + (i + u) * img_width + (j + v)));
 
-				smoothed_data[0][0] = _mm_avg_epu8(smoothed_data[0][0], smoothed_data[0][1]);
-				smoothed_data[2][0] = _mm_avg_epu8(smoothed_data[2][0], smoothed_data[2][1]);
-				smoothed_data[0][0] = _mm_avg_epu8(smoothed_data[0][0], smoothed_data[2][0]);
+			smoothed_data[0][0] = _mm_avg_epu8(smoothed_data[0][0], smoothed_data[0][1]);
+			smoothed_data[2][0] = _mm_avg_epu8(smoothed_data[2][0], smoothed_data[2][1]);
+			smoothed_data[0][0] = _mm_avg_epu8(smoothed_data[0][0], smoothed_data[2][0]);
 
-				smoothed_data[0][2] = _mm_avg_epu8(smoothed_data[0][2], smoothed_data[2][2]);
-				smoothed_data[1][0] = _mm_avg_epu8(smoothed_data[1][0], smoothed_data[1][2]);
-				smoothed_data[0][2] = _mm_avg_epu8(smoothed_data[0][2], smoothed_data[1][0]);
+			smoothed_data[0][2] = _mm_avg_epu8(smoothed_data[0][2], smoothed_data[2][2]);
+			smoothed_data[1][0] = _mm_avg_epu8(smoothed_data[1][0], smoothed_data[1][2]);
+			smoothed_data[0][2] = _mm_avg_epu8(smoothed_data[0][2], smoothed_data[1][0]);
 
-				smoothed_data[0][0] = _mm_avg_epu8(smoothed_data[0][2], smoothed_data[0][0]);
+			smoothed_data[0][0] = _mm_avg_epu8(smoothed_data[0][2], smoothed_data[0][0]);
 
-				avg = _mm_avg_epu8(smoothed_data[0][0], smoothed_data[0][1]);
-				avg = _mm_avg_epu8(smoothed_data[0][0], avg);
-				avg = _mm_avg_epu8(smoothed_data[0][0], avg);
+			avg = _mm_avg_epu8(smoothed_data[0][0], smoothed_data[0][1]);
+			avg = _mm_avg_epu8(smoothed_data[0][0], avg);
+			avg = _mm_avg_epu8(smoothed_data[0][0], avg);
 
-				_mm_storeu_si128((__m128i*)(smooth_img_char + (i + 1) * img_width + (j + 1)), avg);
+			_mm_storeu_si128((__m128i*)(smooth_img_char + (i + 1) * img_width + (j + 1)), avg);
 		}
 
 	for (int i = img_height - 2; i < img_height; i++)
