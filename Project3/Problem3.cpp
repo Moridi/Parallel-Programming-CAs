@@ -96,7 +96,7 @@ Ipp64u smooth_parallel()
 			avg = _mm_avg_epu8(smoothed_data[0][0], avg);
 			avg = _mm_avg_epu8(smoothed_data[0][0], avg);
 
-			_mm_storeu_si128((__m128i*)(smooth_img_char + (i + 1) * img_width + (j + 1)), avg);
+			_mm_storeu_si128((__m128i*)(smooth_img_char + i * img_width + j), avg);
 		}
 
 	for (int i = img_height - 2; i < img_height; i++)

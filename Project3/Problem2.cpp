@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "stdio.h"
+#include <math.h>
 
 #include "ipp.h"
 #include "intrin.h"
@@ -39,6 +40,8 @@ Ipp64u find_matrix_value_serial()
 		result += sub;
 	}
 
+	result = sqrt(result);
+
 	end = ippGetCpuClocks();
 	serial_duration = end - start;
 
@@ -63,6 +66,8 @@ Ipp64u find_matrix_value_parallel()
 	sum = _mm_hadd_ps(sum, sum);
 	sum = _mm_hadd_ps(sum, sum);
 	float result = _mm_cvtss_f32(sum);
+
+	result = sqrt(result);
 
 	end = ippGetCpuClocks();
 	parallel_duration = end - start;

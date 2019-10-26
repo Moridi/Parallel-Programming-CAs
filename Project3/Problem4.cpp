@@ -66,15 +66,15 @@ Ipp64u diff_parallel()
 	start = ippGetCpuClocks();
 
 	for (int i = 0; i < height; ++i)
-	for (int j = 0; j < width; j += 16)
-	{
-		__m128i m1 = _mm_loadu_si128((__m128i*)(first_data + i * width + j));
-		__m128i m2 = _mm_loadu_si128((__m128i*)(second_data + i * width + j));
-		__m128i diff = _mm_sub_epi8(m1, m2);
-		__m128i abs = _mm_abs_epi8(diff);
+		for (int j = 0; j < width; j += 16)
+		{
+			__m128i m1 = _mm_loadu_si128((__m128i*)(first_data + i * width + j));
+			__m128i m2 = _mm_loadu_si128((__m128i*)(second_data + i * width + j));
+			__m128i diff = _mm_sub_epi8(m1, m2);
+			__m128i abs = _mm_abs_epi8(diff);
 
-		_mm_storeu_si128((__m128i*)(diff_img_char + i * width + j), abs);
-	}
+			_mm_storeu_si128((__m128i*)(diff_img_char + i * width + j), abs);
+		}
 
 	end = ippGetCpuClocks();
 	parallel_duration = end - start;

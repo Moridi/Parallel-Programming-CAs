@@ -89,6 +89,7 @@
     <ClInclude Include="Problem2.h" />
     <ClInclude Include="Problem3.h" />
     <ClInclude Include="Problem4.h" />
+    <ClInclude Include="Problems.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
