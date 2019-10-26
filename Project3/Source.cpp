@@ -10,6 +10,6 @@ using namespace std;
 int main(void)
 {
 	problem3();
-	//while (1)
-	//	printf("");
+	while (1)
+		printf("");
 }

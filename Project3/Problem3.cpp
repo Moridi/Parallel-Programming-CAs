@@ -68,27 +68,64 @@ Ipp64u smooth_serial()
 			smooth_img_char[i * img_width + j] = avg / 9;
 		}
 
+	for (int i = img_height - 2; i < img_height; i++)
+		for (int j = img_width - 2; j < img_width; j++)
+			smooth_img_char[i * img_width + j] = in_img_char[i * img_width + j];
 
 	end = ippGetCpuClocks();
 	serial_duration = end - start;
 
-	show_smoothed_image(smooth_img);
 	printf("Serial Run time = %d\n", (Ipp32s)serial_duration);
+	show_smoothed_image(smooth_img);
+	
 	return serial_duration;
 }
 
 Ipp64u smooth_parallel()
 {
 	Ipp64u start, end, parallel_duration;
-	IplImage *smooth_img;
-	unsigned char *smooth_img_char;
+	IplImage* smooth_img = cvCreateImage(cvGetSize(in_img), IPL_DEPTH_8U, 1);
+	unsigned char* smooth_img_char = (unsigned char*)smooth_img->imageData;
 
 	start = ippGetCpuClocks();
 
+	__m128i smoothed_data[3][3];
+	__m128i avg;
 
+	for (int i = 0; i < img_height - 2; i++)
+		for (int j = 0; j < img_width - 2; j += 16)
+		{
+			for (int u = 0; u < 3; u++)
+				for (int v = 0; v < 3; v++)
+					smoothed_data[u][v] = _mm_loadu_si128(
+							(__m128i*)(in_img_char + (i + u) * img_width + (j + v)));
+
+				smoothed_data[0][0] = _mm_avg_epu8(smoothed_data[0][0], smoothed_data[0][1]);
+				smoothed_data[2][0] = _mm_avg_epu8(smoothed_data[2][0], smoothed_data[2][1]);
+				smoothed_data[0][0] = _mm_avg_epu8(smoothed_data[0][0], smoothed_data[2][0]);
+
+				smoothed_data[0][2] = _mm_avg_epu8(smoothed_data[0][2], smoothed_data[2][2]);
+				smoothed_data[1][0] = _mm_avg_epu8(smoothed_data[1][0], smoothed_data[1][2]);
+				smoothed_data[0][2] = _mm_avg_epu8(smoothed_data[0][2], smoothed_data[1][0]);
+
+				smoothed_data[0][0] = _mm_avg_epu8(smoothed_data[0][2], smoothed_data[0][0]);
+
+				avg = _mm_avg_epu8(smoothed_data[0][0], smoothed_data[0][1]);
+				avg = _mm_avg_epu8(smoothed_data[0][0], avg);
+				avg = _mm_avg_epu8(smoothed_data[0][0], avg);
+
+				_mm_storeu_si128((__m128i*)(smooth_img_char + (i + 1) * img_width + (j + 1)), avg);
+		}
+
+	for (int i = img_height - 2; i < img_height; i++)
+		for (int j = img_width - 2; j < img_width; j++)
+			smooth_img_char[i * img_width + j] = in_img_char[i * img_width + j];
 
 	end = ippGetCpuClocks();
 	parallel_duration = end - start;
+
+	printf("Parallel Run time = %d\n", (Ipp32s)parallel_duration);
+	show_smoothed_image(smooth_img);
 
 	return parallel_duration;
 }
@@ -101,5 +138,5 @@ void problem3()
 	Ipp64u serial_duration = smooth_serial();
 	Ipp64u parallel_duration = smooth_parallel();
 
-	printf("Speed-up = %d\n", serial_duration / parallel_duration);
+	printf("Speed-up = %f\n", (float)serial_duration / (float)parallel_duration);
 }
