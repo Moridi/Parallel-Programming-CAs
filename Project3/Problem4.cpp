@@ -38,9 +38,6 @@ void load_images()
 		exit(EXIT_FAILURE);
 	}
 
-	show_image(first);
-	show_image(second);
-	
 	first_data = (unsigned char *)first->imageData;
 	second_data = (unsigned char *)second->imageData;
 
@@ -65,22 +62,35 @@ Ipp64u diff_serial()
 	serial_duration = end - start;
 
 	show_image(diff_img);
+	printf("Parallel Run time = %d\n", (Ipp32s)serial_duration);
+
 	return serial_duration;
 }
 
 Ipp64u diff_parallel()
 {
 	Ipp64u start, end, parallel_duration;
-	IplImage *smooth_img;
-	unsigned char *smooth_img_char;
+	IplImage* diff_img = cvCreateImage(cvGetSize(first), IPL_DEPTH_8U, 1);
+	unsigned char* diff_img_char = (unsigned char*)diff_img->imageData;
 
 	start = ippGetCpuClocks();
 
+	for (int i = 0; i < height; ++i)
+	for (int j = 0; j < width; j += 16)
+	{
+		__m128i m1 = _mm_loadu_si128((__m128i*)(first_data + i * width + j));
+		__m128i m2 = _mm_loadu_si128((__m128i*)(second_data + i * width + j));
+		__m128i diff = _mm_sub_epi8(m1, m2);
+		__m128i abs = _mm_abs_epi8(diff);
 
+		_mm_storeu_si128((__m128i*)(diff_img_char + i * width + j), abs);
+	}
 
 	end = ippGetCpuClocks();
 	parallel_duration = end - start;
 
+	show_image(diff_img);
+	printf("Parallel Run time = %d\n", (Ipp32s)parallel_duration);
 	return parallel_duration;
 }
 
@@ -92,5 +102,5 @@ void problem4()
 	Ipp64u serial_duration = diff_serial();
 	Ipp64u parallel_duration = diff_parallel();
 
-	printf("Speed-up = %d\n", serial_duration / parallel_duration);
+	printf("Speed-up = %f\n", (float)serial_duration / parallel_duration);
 }
