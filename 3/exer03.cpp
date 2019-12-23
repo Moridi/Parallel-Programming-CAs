@@ -31,4 +31,8 @@ int main(int argc, char *argv[])
 		}
 	}
 	printf("Main: Done.\n");
+
+	printf("Main: Join started.\n");
+	for(t=0;t<NUM_THREADS;t++)
+		pthread_join(threads[t], NULL);
 }

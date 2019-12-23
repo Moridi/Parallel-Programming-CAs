@@ -9,7 +9,7 @@ void *PrintHello(void *threadid)
 {
 	long taskid;
 	sleep(1);
-	taskid = *(long *)threadid;
+	taskid = (long) threadid;
 	printf("Hello from thread %ld\n", taskid);
 	pthread_exit(NULL);
 }
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 
 	for(t=0;t<NUM_THREADS;t++) {
 		printf("Creating thread %ld\n", t);
-		rc = pthread_create(&threads[t], NULL, PrintHello, (void *) &t);
+		rc = pthread_create(&threads[t], NULL, PrintHello, (void *)t);
 		if (rc) {
 			printf("ERROR; return code from pthread_create() is %d\n", rc);
 			exit(-1);
