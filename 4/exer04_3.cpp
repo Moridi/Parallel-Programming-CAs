@@ -9,6 +9,7 @@
 
 int 	*a, *b;
 long 	sum = 0;
+pthread_mutex_t 	mutexsum;
 
 void *dotprod(void *arg)
 {
@@ -18,10 +19,16 @@ void *dotprod(void *arg)
 	len = VECLEN;
 	start = offset*len;
 	end   = start + len;
+	long my_sum = 0;
 
 	printf("thread: %ld starting. start=%d end=%d\n",tid,start,end-1);
 	for (i=start; i<end ; i++)
-		sum += (a[i] * b[i]);
+		my_sum += (a[i] * b[i]);
+
+	pthread_mutex_lock (&mutexsum);
+	sum += my_sum;
+	pthread_mutex_unlock (&mutexsum);
+	
 	printf("thread: %ld done. Global sum now is=%li\n",tid,sum);
 
 	pthread_exit((void*) 0);
